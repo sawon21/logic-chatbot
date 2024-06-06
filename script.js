@@ -13,8 +13,8 @@ document.addEventListener("DOMContentLoaded", function() {
         { question: "লজিকের প্রোগ্রামসমূহ", tags: ["Logic programme","কি কি পড়ানো হয়"] , answer: " ✪ HSC Academic ✪ HSC Preparation   ✪ বিশ্ববিদ্যালয় ভর্তি প্রোগ্রাম  (বিজ্ঞান,মানবিক,ব্যবসায় শিক্ষা,বিভাগ পরিবর্তন) ✪ মেডিলজিক মেডিকেল ভর্তি প্রোগ্রাম (মেডিকেল+ভাসির্টি Combined Special Batch)  ✪ নার্সিং ভর্তি প্রোগ্রাম  (বিএসসি ইন নার্সিং , ডিপ্লোমা ইন নার্সিং , ডিপ্লোমা ইন মিডওয়াইফারি )" },
         { question: "লজিকের পরিচালক", tags: ["director","rafiqul islam","rofikul","rafikul","পরিচালক"] , answer: "MD. Rafiqul Islam ◑ B.Sc in CSE (HSTU - 1st Class 1st) ◑ M.Sc in CSE (RUET) ◑ Experience : 12 years +  ◑ Writer : Logic Math ◑ Subject : Math " },
         { question: "কোথায় অবস্থিত? ", tags: ["ঠিকানা", "কোথায়","কোন জায়গায়","শাখা কোথায়"] , answer: "ঠিকানা: ✪ শাখা -১: আমু কাউন্সিলর গলি, আয়ান প্যালেস,ফকিরপাড়া, দিনাজপুর ✪ শাখা- ২; মহিলা বহুমুখী শিক্ষাকেন্দ্র সংলগ্ন, বালুবাড়ি, দিনাজপুর" },
-        { question: "What's the weather like?", tags: ["weather", "forecast"] , answer: "I'm sorry, I cannot provide real-time weather information." },
-        // Add more questions and answers here
+        { question: "বিজ্ঞান বিভাগের শিক্ষকবৃন্দ ", tags: ["weather", "forecast"] , answer: "➤ MD. Rafiqul Islam ◑ B.Sc in CSE (HSTU - 1st Class 1st) ◑ M.Sc in CSE (RUET) ◑ Experience : 12 years +  ◑ Writer : Logic Math ◑ Subject : Math ➤➤ Sinha Mohammad Riad ◑ B.Sc in EEE (BUET) ◑ Exp-10 years+ ◑ Mentor of 1-lakh+ ◑ Co-writer : Aspect Physics ◑ Subject: Physics  ➤➤➤ Shohanur Rahman Shohan ◑ B.Sc in Leather Engineering (DU) ◑ Exp-7 Years+ ◑ Mentor of 1 lakh+ ◑ Co-writer: Aspect Biology ◑ Subject: Biolog ➤➤➤➤ Sazzad Hossen Nacem ◑ Exp-6 Years+ ◑ Mentor of 1 lakh+ ◑ Writer Aspect Physics ◑ Subject: Physics ➤➤➤➤➤ Mofizul Islam Limon (DU) ◑ Writer: Logic Physics ◑ Subject Physics ➤➤➤➤➤➤ Shamim Hossain (BUTEX) ◑ Exp-8 Years+ Subject: Chemisty"},
+       // Add more questions and answers here
     ];
 
     // Event listener for send button
