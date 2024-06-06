@@ -1,0 +1,233 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Ubuntu:wght@400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Caudex:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+body {
+    
+     font-family: "Forum", serif;
+    margin: 0;
+    padding: 0;
+    background-color: #333;
+}
+header {
+    background-color: #2d308e;
+    padding: 7px;
+    overflow: aauto
+    position: fixed;
+}
+
+.logo-heading {
+    display: flex;
+    align-items: center;
+}
+
+.logo {
+    width: 50px; /* Adjust as needed */
+    height: 50px; /* Adjust as needed */
+    margin-right: 10px; /* Adjust as needed */
+}
+
+h1 {
+    margin: 0;
+    color: orange ;
+}
+
+.chat-container {
+  font-family: "Caudex", serif;
+    position: fixed;
+    bottom: 100px;
+    right: 20px;
+    left: 20px;
+    max-width: 600px;
+    height: 540px;
+    margin: auto;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    background-color: #444;
+    overflow: auto;
+    padding: 20px;
+}
+
+.input-container {
+  font-family: "Caudex", serif;
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    right: 20px;
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    background-color: #fff;
+    border-radius: 25px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+input[type="text"] {
+    flex: 1;
+    padding: 10px;
+    border: none;
+    border-radius: 25px;
+    margin-right: 10px;
+    outline: none;
+}
+
+#send-btn {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    outline: none;
+    transition: background-color 0.3s ease;
+}
+
+#send-btn:hover {
+    background-color: #0056b3;
+}
+
+.message {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 20px;
+}
+
+.user-profile-pic, .bot-profile-pic {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 15px;
+}
+
+.user-message {
+    justify-content: flex-end;
+}
+
+.bot-message {
+    justify-content: flex-start;
+}
+
+.message-content {
+    max-width: 70%;
+    padding: 10px 15px;
+    border-radius: 20px;
+    background-color: #f2f2f2;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.user-message .message-content {
+    background-color: #007bff;
+    color: #fff;
+}
+
+.bot-message .message-content {
+    background-color: #008000;
+    color: #fff;
+    font-weight: bold;
+}
+
+.typing-animation::after {
+    content: "";
+    display: inline-block;
+    vertical-align: middle;
+    width: 0;
+    height: 100%;
+    border-left: 2px solid #333;
+    margin-left: 5px;
+    animation: typing 1s infinite;
+}
+
+@keyframes typing {
+    0% { width: 0; }
+    50% { width: 5px; }
+    100% { width: 0; }
+}
+.suggestion-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 10px;
+}
+
+.suggestion-container button {
+    background-color: #4CAF;
+    color: black;
+    padding: 10px 20px;
+    margin: 5px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.suggestion-container button:hover {
+    background-color: #45a049;
+}
+
+
+  .info-icon {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    cursor: pointer;
+    z-index: 9999;
+    background-color: black ;
+    border-radius: 70px;
+    transition: background-color 0.3s;
+  }
+  .info-icon:hover {
+    background-color: #2980b9;
+  }
+  .info-icon svg {
+    fill: #fff;
+    width: 20px;
+    height: 20px;
+  }
+  .ipopup {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    font-family: 'Poppins', sans-serif;
+    transform: translate(-50%, -50%);
+    background-color: #eeeeee;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    z-index: 9999;
+    width: 300px;
+    text-align: center;
+    animation: fadeIn 0.5s ease-in-out;
+  }
+  .ipopup h2 {
+    color: #3498db;
+    margin-bottom: 10px;
+  }
+  .ipopup h4 {
+    color: #555;
+  }
+  .ipopup h3 {
+    color: brown ;
+    font-weight:bold;
+    margin-bottom: 20px;
+   font-family:  "Lucida Console", Courier, monospace;
+   font-size: 20px;
+  }
+  .ipopup button {
+    background-color: red;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  .ipopup button:hover {
+    background-color: black;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }

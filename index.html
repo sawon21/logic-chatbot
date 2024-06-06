@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta property="og:title" content="Logic Chat Bot">
+<meta property="og:description" content="মুহূর্তের মধ্যে সকল প্রশ্নের উত্তর পাবেন চ্যাট বটের মাধ্যমে। ">
+    <meta property="og:image" content="Chatbot.jpg">
+    <title>Logic Chat Bot</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <div class="logo-heading">
+            <img src="bot-profile-pic.png" alt="Logo" class="logo">
+            <h1>Logic Chat Bot</h1>
+        </div>
+            <div class="info-icon" onclick="openipopup()">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+    <path fill="none" d="M0 0h24v24H0V0z"/>
+    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"/>
+  </svg>
+</div>
+    </header>
+
+
+<div class="ipopup" id="ipopup">
+  <h2>Information</h2>
+  <hr>
+  <h3>This Caht Boat is developed by <br> Mehedi Al Hasan Sawon </h3>
+<ul type="disc">
+  <li>  <h4>Facebook : <a href="https://www.facebook.com/mdmehedialhasansawon?mibextid=ZbWKwL">Mehedi Al Hasan Sawon </a></h4></li>
+</ul>
+<br>
+  <button onclick="closeipopup()">Close</button>
+</div>
+
+    <div class="input-container">
+        <input type="text" id="user-input" placeholder="Type your message..." autocomplete="off">
+        <button id="send-btn">Send</button>
+    </div>
+    <div class="chat-container" id="chat-container"></div>
+    <script src="script.js"></script>
+</body>
+</html>
