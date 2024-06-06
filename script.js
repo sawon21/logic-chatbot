@@ -157,3 +157,10 @@ document.addEventListener("DOMContentLoaded", function() {
         }, 50); // Adjust typing speed as needed
     }
 });
+function openipopup() {
+    document.getElementById('ipopup').style.display = 'block';
+  }
+
+  function closeipopup() {
+    document.getElementById('ipopup').style.display = 'none';
+  }
